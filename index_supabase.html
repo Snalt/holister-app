@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Sistema de Gestão de Clientes
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script>
+   tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            light: '#D4AF37',
+                            DEFAULT: '#CFB53B',
+                            dark: '#B8860B',
+                        }
+                    }
+                }
+            }
+        }
+  </script>
+  <style>
+   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f8f8;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #CFB53B;
+            color: #CFB53B;
+        }
+        
+        .print-only {
+            display: none;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block;
+            }
+            
+            body {
+                background-color: white;
+                padding: 20px;
+            }
+            
+            .drawing-area {
+                border: 1px dashed #000;
+                height: 200px;
+                margin: 20px 0;
+            }
+        }
+        
+        .image-upload-container {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .image-upload-container:hover {
+            border-color: #CFB53B;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+  </style>
+ </head>
+ <body class="min-h-screen">
+  <header class="bg-black text-white shadow-lg">
+   <div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl md:text-3xl font-bold flex items-center">
+     <span class="text-gold">
+      Sistema de Gestão
+     </span>
+     <span class="ml-2">
+      de Clientes
+     </span>
+    </h1>
+   </div>
+  </header>
+  <nav class="bg-black text-white shadow-md no-print">
+   <div class="container mx-auto px-4">
+    <ul class="flex flex-wrap text-sm md:text-base">
+     <li class="tab mr-1 md:mr-4 py-4 px-2 md:px-6 cursor-pointer hover:text-gold-light transition-colors" data-tab="cadastro">
+      Cadastro de Clientes
+     </li>
+     <li class="tab mr-1 md:mr-4 py-4 px-2 md:px-6 cursor-pointer hover:text-gold-light transition-colors" data-tab="consulta">
+      Consulta de Clientes
+     </li>
+     <li class="tab mr-1 md:mr-4 py-4 px-2 md:px-6 cursor-pointer hover:text-gold-light transition-colors" data-tab="orcamento">
+      Criar Orçamento
+     </li>
+     <li class="tab py-4 px-2 md:px-6 cursor-pointer hover:text-gold-light transition-colors" data-tab="consulta-orcamento">
+      Consulta de Orçamentos
+     </li>
+    </ul>
+   </div>
+  </nav>
+  <main class="container mx-auto px-4 py-8">
+   <!-- Cadastro de Clientes -->
+   <section class="tab-content" id="cadastro">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+     <h2 class="text-2xl font-semibold mb-6 text-black border-b border-gold pb-2">
+      Cadastro de Clientes
+     </h2>
+     <form class="space-y-4" id="clientForm">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="nome">
+         Nome Completo
+        </label>
+        <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="nome" name="nome" required="" type="text"/>
+       </div>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="telefone">
+         Telefone
+        </label>
+        <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="telefone" name="telefone" required="" type="tel"/>
+       </div>
+      </div>
+      <div>
+       <label class="block text-sm font-medium text-gray-700 mb-1" for="endereco">
+        Endereço
+       </label>
+       <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="endereco" name="endereco" required="" type="text"/>
+      </div>
+      <div>
+       <label class="block text-sm font-medium text-gray-700 mb-1" for="obs">
+        Observações
+       </label>
+       <textarea class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="obs" name="obs" rows="3"></textarea>
+      </div>
+      <div class="flex justify-end">
+       <button class="px-6 py-2 bg-black text-gold font-medium rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2" type="submit">
+        Cadastrar Cliente
+       </button>
+      </div>
+     </form>
+    </div>
+    <div class="bg-black text-white p-4 rounded-md mt-4">
+     <p class="text-sm">
+      <span class="text-gold font-bold">
+       DEMO:
+      </span>
+      Esta é uma versão de demonstração. Em uma implementação real, os dados seriam salvos no Google Sheets através de uma integração backend.
+     </p>
+    </div>
+   </section>
+   <!-- Consulta de Clientes -->
+   <section class="tab-content hidden" id="consulta">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+     <h2 class="text-2xl font-semibold mb-6 text-black border-b border-gold pb-2">
+      Consulta de Clientes
+     </h2>
+     <div class="mb-6">
+      <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
+       <input class="flex-grow px-4 py-2 focus:outline-none" id="searchClient" placeholder="Buscar cliente por nome..." type="text"/>
+       <button class="bg-black text-gold px-4 py-2 focus:outline-none hover:bg-gray-800" id="searchClientBtn">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+      </div>
+     </div>
+     <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+       <thead class="bg-gray-50">
+        <tr>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Nome
+         </th>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Telefone
+         </th>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Endereço
+         </th>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Ações
+         </th>
+        </tr>
+       </thead>
+       <tbody class="bg-white divide-y divide-gray-200" id="clientTableBody">
+        <!-- Dados dos clientes serão inseridos aqui -->
+       </tbody>
+      </table>
+     </div>
+     <div class="text-center py-4 text-gray-500" id="noClientsMessage">
+      Nenhum cliente cadastrado.
+     </div>
+    </div>
+   </section>
+   <!-- Criar Orçamento -->
+   <section class="tab-content hidden" id="orcamento">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+     <h2 class="text-2xl font-semibold mb-6 text-black border-b border-gold pb-2">
+      Criar Orçamento
+     </h2>
+     <form class="space-y-6" id="orcamentoForm">
+      <!-- Informações do Cliente -->
+      <div>
+       <label class="block text-sm font-medium text-gray-700 mb-1" for="clienteOrcamento">
+        Cliente
+       </label>
+       <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="clienteOrcamento" name="clienteOrcamento" required="">
+        <option value="">
+         Selecione um cliente
+        </option>
+       </select>
+      </div>
+      <div>
+       <h3 class="text-lg font-medium mb-4">
+        Itens do Orçamento
+       </h3>
+       <div class="space-y-8" id="itensContainer">
+        <div class="item-row border border-gray-200 rounded-lg p-4 bg-gray-50">
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <!-- Primeira linha: Modelo e Linha -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Modelo
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="modelo[]" type="text"/>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Linha
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="linha[]" type="text"/>
+          </div>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <!-- Segunda linha: Quantidade, Ambiente e Cor -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Quantidade
+           </label>
+           <select class="item-quantidade w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="quantidade[]">
+            <option value="1">
+             1
+            </option>
+            <option value="2">
+             2
+            </option>
+            <option value="3">
+             3
+            </option>
+            <option value="4">
+             4
+            </option>
+            <option value="5">
+             5
+            </option>
+            <option value="6">
+             6
+            </option>
+            <option value="7">
+             7
+            </option>
+            <option value="8">
+             8
+            </option>
+            <option value="9">
+             9
+            </option>
+           </select>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Ambiente
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="ambiente[]" type="text"/>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Cor
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="cor[]" type="text"/>
+          </div>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <!-- Terceira linha: Tipo, Largura e Altura -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Tipo
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="tipo[]" type="text"/>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Largura (cm)
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="largura[]" placeholder="Ex: 100" type="number"/>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Altura (cm)
+           </label>
+           <input class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="altura[]" placeholder="Ex: 50" type="number"/>
+          </div>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Quarta linha: Descrição e Imagem -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Descrição
+           </label>
+           <textarea class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" name="descricao[]" rows="4"></textarea>
+          </div>
+          <div>
+           <label class="block text-sm font-medium text-gray-700 mb-1">
+            Imagem do Produto
+           </label>
+           <div class="image-upload-container" data-index="0">
+            <input accept="image/*" class="hidden image-input" name="imagem[]" type="file"/>
+            <img alt="Preview" class="image-preview hidden" src="#"/>
+           </div>
+          </div>
+         </div>
+         <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+          <button class="remove-item text-red-500 hover:text-red-700 flex items-center" type="button">
+           <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            </path>
+           </svg>
+           Remover Item
+          </button>
+         </div>
+        </div>
+       </div>
+       <div class="mt-4">
+        <button class="text-gold bg-black px-4 py-2 rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2" id="addItemBtn" type="button">
+         + Adicionar Item
+        </button>
+       </div>
+      </div>
+      <div>
+       <label class="block text-sm font-medium text-gray-700 mb-1" for="observacoesOrcamento">
+        Observações
+       </label>
+       <textarea class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent" id="observacoesOrcamento" name="observacoesOrcamento" rows="3"></textarea>
+      </div>
+      <div class="flex justify-end">
+       <button class="px-6 py-2 bg-black text-gold font-medium rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2" type="submit">
+        Gerar Orçamento
+       </button>
+      </div>
+     </form>
+    </div>
+    <div class="bg-black text-white p-4 rounded-md mt-4">
+     <p class="text-sm">
+      <span class="text-gold font-bold">
+       DEMO:
+      </span>
+      Esta é uma versão de demonstração. Em uma implementação real, os orçamentos seriam salvos no Google Sheets através de uma integração backend.
+     </p>
+    </div>
+   </section>
+   <!-- Consulta de Orçamentos -->
+   <section class="tab-content hidden" id="consulta-orcamento">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+     <h2 class="text-2xl font-semibold mb-6 text-black border-b border-gold pb-2">
+      Consulta de Orçamentos
+     </h2>
+     <div class="mb-6">
+      <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
+       <input class="flex-grow px-4 py-2 focus:outline-none" id="searchOrcamento" placeholder="Buscar orçamento por cliente..." type="text"/>
+       <button class="bg-black text-gold px-4 py-2 focus:outline-none hover:bg-gray-800" id="searchOrcamentoBtn">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+      </div>
+     </div>
+     <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+       <thead class="bg-gray-50">
+        <tr>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Cliente
+         </th>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Data
+         </th>
+         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+          Ações
+         </th>
+        </tr>
+       </thead>
+       <tbody class="bg-white divide-y divide-gray-200" id="orcamentoTableBody">
+        <!-- Dados dos orçamentos serão inseridos aqui -->
+       </tbody>
+      </table>
+     </div>
+     <div class="text-center py-4 text-gray-500" id="noOrcamentosMessage">
+      Nenhum orçamento cadastrado.
+     </div>
+    </div>
+   </section>
+  </main>
+  <!-- Modal de Visualização/Impressão de Orçamento -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="orcamentoModal">
+   <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+    <div class="p-6">
+     <div class="flex justify-between items-center mb-6 no-print">
+      <h3 class="text-xl font-bold">
+       Detalhes do Orçamento
+      </h3>
+      <div class="flex space-x-2">
+       <button class="px-4 py-2 whatsapp-btn rounded-md hover:bg-green-700 transition-colors flex items-center" id="shareWhatsappBtn">
+        <svg class="h-5 w-5 mr-1" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z">
+         </path>
+        </svg>
+        Enviar
+       </button>
+       <button class="px-4 py-2 bg-black text-gold rounded-md hover:bg-gray-800 transition-colors" id="printOrcamentoBtn">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+       <button class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors" id="closeOrcamentoModalBtn">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+         <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+         </path>
+        </svg>
+       </button>
+      </div>
+     </div>
+     <div class="space-y-6" id="orcamentoDetails">
+      <!-- Cabeçalho do Orçamento -->
+      <div class="border-b border-gray-200 pb-4">
+       <div class="print-only text-center mb-6">
+        <h1 class="text-2xl font-bold">
+         ORÇAMENTO
+        </h1>
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+         <p class="text-sm text-gray-600">
+          Cliente:
+         </p>
+         <p class="font-medium" id="modalClienteNome">
+         </p>
+         <p class="text-sm" id="modalClienteTelefone">
+         </p>
+         <p class="text-sm" id="modalClienteEndereco">
+         </p>
+        </div>
+        <div class="text-right">
+         <p class="text-sm text-gray-600">
+          Orçamento:
+         </p>
+         <p class="font-medium" id="modalOrcamentoId">
+         </p>
+         <p class="text-sm text-gray-600">
+          Data:
+         </p>
+         <p class="font-medium" id="modalOrcamentoData">
+         </p>
+        </div>
+       </div>
+      </div>
+      <!-- Itens do Orçamento -->
+      <div>
+       <h4 class="font-medium mb-2">
+        Itens
+       </h4>
+       <div class="space-y-6" id="modalItensContainer">
+        <!-- Itens serão inseridos aqui -->
+       </div>
+      </div>
+      <!-- Observações -->
+      <div>
+       <h4 class="font-medium mb-2">
+        Observações:
+       </h4>
+       <p class="text-sm text-gray-700 border p-3 rounded-md bg-gray-50" id="modalObservacoes">
+       </p>
+      </div>
+      <!-- Áreas para desenho (visível apenas na impressão) -->
+      <div class="print-only mt-8">
+       <h4 class="font-medium mb-2">
+        Espaço para desenho dos itens:
+       </h4>
+       <div class="space-y-4" id="drawingAreas">
+        <!-- Áreas de desenho serão inseridas aqui -->
+       </div>
+      </div>
+      <!-- Assinaturas (visível apenas na impressão) -->
+      <div class="print-only mt-16">
+       <div class="grid grid-cols-2 gap-8">
+        <div class="text-center">
+         <div class="border-t border-gray-400 pt-2">
+          <p>
+           Assinatura do Cliente
+          </p>
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="border-t border-gray-400 pt-2">
+          <p>
+           Assinatura da Empresa
+          </p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <footer class="bg-black text-white py-4 mt-8 no-print">
+   <div class="container mx-auto px-4 text-center">
+    <p class="text-sm">
+     Sistema de Gestão de Clientes © 2023
+    </p>
+   </div>
+  </footer>
+  <script>
+   // Armazenamento local para dados
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let orcamentos = JSON.parse(localStorage.getItem('orcamentos')) || [];
+        let currentOrcamentoId = parseInt(localStorage.getItem('currentOrcamentoId')) || 1;
+        let currentOrcamento = null; // Para armazenar o orçamento atual visualizado
+        
+        // Funções de utilidade
+        function formatarData(data) {
+            const d = new Date(data);
+            return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+        }
+        
+        // Navegação por abas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remover classe ativa de todas as abas
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
+                
+                // Adicionar classe ativa à aba clicada
+                tab.classList.add('tab-active');
+                
+                // Esconder todos os conteúdos
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Mostrar o conteúdo correspondente
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.remove('hidden');
+                
+                // Atualizar listas se necessário
+                if (tabId === 'consulta') {
+                    atualizarTabelaClientes();
+                } else if (tabId === 'orcamento') {
+                    atualizarSelectClientes();
+                } else if (tabId === 'consulta-orcamento') {
+                    atualizarTabelaOrcamentos();
+                }
+            });
+        });
+        
+        // Inicializar a primeira aba como ativa
+        document.querySelector('.tab').classList.add('tab-active');
+        
+        // Cadastro de Clientes
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cliente = {
+                id: Date.now(),
+                nome: document.getElementById('nome').value,
+                telefone: document.getElementById('telefone').value,
+                endereco: document.getElementById('endereco').value,
+                obs: document.getElementById('obs').value
+            };
+            
+            clientes.push(cliente);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            
+            // Limpar formulário
+            this.reset();
+            
+            // Mostrar mensagem de sucesso
+            alert('Cliente cadastrado com sucesso!');
+        });
+        
+        // Consulta de Clientes
+        function atualizarTabelaClientes(filtro = '') {
+            const tbody = document.getElementById('clientTableBody');
+            const noClientsMessage = document.getElementById('noClientsMessage');
+            
+            tbody.innerHTML = '';
+            
+            const clientesFiltrados = filtro 
+                ? clientes.filter(c => c.nome.toLowerCase().includes(filtro.toLowerCase()))
+                : clientes;
+            
+            if (clientesFiltrados.length === 0) {
+                noClientsMessage.style.display = 'block';
+                return;
+            }
+            
+            noClientsMessage.style.display = 'none';
+            
+            clientesFiltrados.forEach(cliente => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${cliente.nome}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${cliente.telefone}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${cliente.endereco}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-gold hover:text-gold-dark mr-3 edit-client" data-id="${cliente.id}">Editar</button>
+                        <button class="text-red-600 hover:text-red-800 delete-client" data-id="${cliente.id}">Excluir</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Adicionar eventos aos botões
+            document.querySelectorAll('.edit-client').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    editarCliente(id);
+                });
+            });
+            
+            document.querySelectorAll('.delete-client').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    excluirCliente(id);
+                });
+            });
+        }
+        
+        function editarCliente(id) {
+            const cliente = clientes.find(c => c.id === id);
+            
+            if (!cliente) return;
+            
+            // Preencher formulário com dados do cliente
+            document.getElementById('nome').value = cliente.nome;
+            document.getElementById('telefone').value = cliente.telefone;
+            document.getElementById('endereco').value = cliente.endereco;
+            document.getElementById('obs').value = cliente.obs;
+            
+            // Remover cliente da lista
+            clientes = clientes.filter(c => c.id !== id);
+            
+            // Mudar para a aba de cadastro
+            document.querySelector('[data-tab="cadastro"]').click();
+            
+            alert('Edite os dados do cliente e clique em Cadastrar para salvar as alterações.');
+        }
+        
+        function excluirCliente(id) {
+            if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
+            
+            // Verificar se o cliente tem orçamentos
+            const temOrcamentos = orcamentos.some(o => o.cliente.id === id);
+            
+            if (temOrcamentos) {
+                alert('Este cliente possui orçamentos e não pode ser excluído.');
+                return;
+            }
+            
+            clientes = clientes.filter(c => c.id !== id);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            
+            atualizarTabelaClientes();
+        }
+        
+        document.getElementById('searchClientBtn').addEventListener('click', function() {
+            const filtro = document.getElementById('searchClient').value;
+            atualizarTabelaClientes(filtro);
+        });
+        
+        document.getElementById('searchClient').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const filtro = this.value;
+                atualizarTabelaClientes(filtro);
+            }
+        });
+        
+        // Orçamentos
+        function atualizarSelectClientes() {
+            const select = document.getElementById('clienteOrcamento');
+            
+            // Manter apenas a primeira opção
+            select.innerHTML = '<option value="">Selecione um cliente</option>';
+            
+            clientes.forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.id;
+                option.textContent = cliente.nome;
+                select.appendChild(option);
+            });
+        }
+        
+        // Função para configurar o upload de imagem
+        function setupImageUpload(container) {
+            const fileInput = container.querySelector('.image-input');
+            const preview = container.querySelector('.image-preview');
+            
+            container.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+        
+        // Configurar upload de imagem para o item inicial
+        setupImageUpload(document.querySelector('.image-upload-container'));
+        
+        document.getElementById('addItemBtn').addEventListener('click', function() {
+            const container = document.getElementById('itensContainer');
+            const itemIndex = container.children.length;
+            const newRow = document.createElement('div');
+            newRow.className = 'item-row border border-gray-200 rounded-lg p-4 bg-gray-50';
+            
+            newRow.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <!-- Primeira linha: Modelo e Linha -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
+                        <input type="text" name="modelo[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Linha</label>
+                        <input type="text" name="linha[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- Segunda linha: Quantidade, Ambiente e Cor -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
+                        <select name="quantidade[]" class="item-quantidade w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ambiente</label>
+                        <input type="text" name="ambiente[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cor</label>
+                        <input type="text" name="cor[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <!-- Terceira linha: Tipo, Largura e Altura -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                        <input type="text" name="tipo[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Largura (cm)</label>
+                        <input type="number" name="largura[]" placeholder="Ex: 100" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Altura (cm)</label>
+                        <input type="number" name="altura[]" placeholder="Ex: 50" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Quarta linha: Descrição e Imagem -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <textarea name="descricao[]" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Imagem do Produto</label>
+                        <div class="image-upload-container" data-index="${itemIndex}">
+                            <input type="file" name="imagem[]" class="hidden image-input" accept="image/*">
+                            <img class="image-preview hidden" src="#" alt="Preview">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                    <button type="button" class="remove-item text-red-500 hover:text-red-700 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Remover Item
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(newRow);
+            
+            // Configurar upload de imagem para o novo item
+            setupImageUpload(newRow.querySelector('.image-upload-container'));
+            
+            // Adicionar evento para remover item
+            newRow.querySelector('.remove-item').addEventListener('click', function() {
+                container.removeChild(newRow);
+            });
+        });
+        
+        // Criar orçamento
+        document.getElementById('orcamentoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const clienteId = document.getElementById('clienteOrcamento').value;
+            if (!clienteId) {
+                alert('Selecione um cliente para o orçamento.');
+                return;
+            }
+            
+            const cliente = clientes.find(c => c.id == clienteId);
+            
+            const itensRows = document.querySelectorAll('.item-row');
+            const itens = [];
+            
+            itensRows.forEach(row => {
+                const modelo = row.querySelector('input[name="modelo[]"]').value;
+                const linha = row.querySelector('input[name="linha[]"]').value;
+                const quantidade = parseInt(row.querySelector('select[name="quantidade[]"]').value);
+                const ambiente = row.querySelector('input[name="ambiente[]"]').value;
+                const cor = row.querySelector('input[name="cor[]"]').value;
+                const tipo = row.querySelector('input[name="tipo[]"]').value;
+                const largura = row.querySelector('input[name="largura[]"]').value;
+                const altura = row.querySelector('input[name="altura[]"]').value;
+                const descricao = row.querySelector('textarea[name="descricao[]"]').value;
+                
+                // Obter imagem se existir
+                const imageInput = row.querySelector('input[name="imagem[]"]');
+                let imagem = null;
+                
+                if (imageInput.files && imageInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(imageInput.files[0]);
+                    reader.onload = function(e) {
+                        imagem = e.target.result;
+                    };
+                }
+                
+                itens.push({
+                    modelo,
+                    linha,
+                    quantidade,
+                    ambiente,
+                    cor,
+                    tipo,
+                    largura,
+                    altura,
+                    descricao,
+                    imagem
+                });
+            });
+            
+            const orcamento = {
+                id: currentOrcamentoId++,
+                data: new Date().toISOString(),
+                cliente: cliente,
+                itens: itens,
+                observacoes: document.getElementById('observacoesOrcamento').value
+            };
+            
+            orcamentos.push(orcamento);
+            localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+            localStorage.setItem('currentOrcamentoId', currentOrcamentoId);
+            
+            // Limpar formulário
+            this.reset();
+            document.getElementById('itensContainer').innerHTML = `
+                <div class="item-row border border-gray-200 rounded-lg p-4 bg-gray-50">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <!-- Primeira linha: Modelo e Linha -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
+                            <input type="text" name="modelo[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Linha</label>
+                            <input type="text" name="linha[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <!-- Segunda linha: Quantidade, Ambiente e Cor -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade</label>
+                            <select name="quantidade[]" class="item-quantidade w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ambiente</label>
+                            <input type="text" name="ambiente[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cor</label>
+                            <input type="text" name="cor[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <!-- Terceira linha: Tipo, Largura e Altura -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+                            <input type="text" name="tipo[]" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Largura (cm)</label>
+                            <input type="number" name="largura[]" placeholder="Ex: 100" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Altura (cm)</label>
+                            <input type="number" name="altura[]" placeholder="Ex: 50" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Quarta linha: Descrição e Imagem -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                            <textarea name="descricao[]" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Imagem do Produto</label>
+                            <div class="image-upload-container" data-index="0">
+                                <input type="file" name="imagem[]" class="hidden image-input" accept="image/*">
+                                <img class="image-preview hidden" src="#" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                        <button type="button" class="remove-item text-red-500 hover:text-red-700 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Remover Item
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Configurar upload de imagem para o item inicial
+            setupImageUpload(document.querySelector('.image-upload-container'));
+            
+            // Adicionar evento para remover item
+            document.querySelector('.remove-item').addEventListener('click', function() {
+                if (document.querySelectorAll('.item-row').length > 1) {
+                    this.closest('.item-row').remove();
+                } else {
+                    alert('É necessário pelo menos um item no orçamento.');
+                }
+            });
+            
+            // Mostrar mensagem de sucesso
+            alert('Orçamento gerado com sucesso!');
+            
+            // Ir para a aba de consulta de orçamentos
+            document.querySelector('[data-tab="consulta-orcamento"]').click();
+        });
+        
+        // Consulta de Orçamentos
+        function atualizarTabelaOrcamentos(filtro = '') {
+            const tbody = document.getElementById('orcamentoTableBody');
+            const noOrcamentosMessage = document.getElementById('noOrcamentosMessage');
+            
+            tbody.innerHTML = '';
+            
+            const orcamentosFiltrados = filtro 
+                ? orcamentos.filter(o => o.cliente.nome.toLowerCase().includes(filtro.toLowerCase()))
+                : orcamentos;
+            
+            if (orcamentosFiltrados.length === 0) {
+                noOrcamentosMessage.style.display = 'block';
+                return;
+            }
+            
+            noOrcamentosMessage.style.display = 'none';
+            
+            orcamentosFiltrados.forEach(orcamento => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${orcamento.cliente.nome}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${formatarData(orcamento.data)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-gold hover:text-gold-dark mr-3 view-orcamento" data-id="${orcamento.id}">Visualizar</button>
+                        <button class="text-red-600 hover:text-red-800 delete-orcamento" data-id="${orcamento.id}">Excluir</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Adicionar eventos aos botões
+            document.querySelectorAll('.view-orcamento').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    visualizarOrcamento(id);
+                });
+            });
+            
+            document.querySelectorAll('.delete-orcamento').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    excluirOrcamento(id);
+                });
+            });
+        }
+        
+        function visualizarOrcamento(id) {
+            const orcamento = orcamentos.find(o => o.id === id);
+            
+            if (!orcamento) return;
+            
+            // Armazenar o orçamento atual para uso no compartilhamento
+            currentOrcamento = orcamento;
+            
+            // Preencher modal com dados do orçamento
+            document.getElementById('modalClienteNome').textContent = orcamento.cliente.nome;
+            document.getElementById('modalClienteTelefone').textContent = orcamento.cliente.telefone;
+            document.getElementById('modalClienteEndereco').textContent = orcamento.cliente.endereco;
+            document.getElementById('modalOrcamentoId').textContent = `#${orcamento.id}`;
+            document.getElementById('modalOrcamentoData').textContent = formatarData(orcamento.data);
+            
+            const itensContainer = document.getElementById('modalItensContainer');
+            itensContainer.innerHTML = '';
+            
+            // Áreas de desenho para impressão
+            const drawingAreas = document.getElementById('drawingAreas');
+            drawingAreas.innerHTML = '';
+            
+            orcamento.itens.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'border border-gray-200 rounded-lg p-4 bg-gray-50';
+                
+                let imagemHTML = '';
+                if (item.imagem) {
+                    imagemHTML = `
+                        <div class="mt-4">
+                            <img src="${item.imagem}" alt="Imagem do produto" class="max-h-40 mx-auto">
+                        </div>
+                    `;
+                }
+                
+                // Dimensões formatadas
+                const dimensoes = (item.largura || item.altura) ? 
+                    `${item.largura || '?'}cm × ${item.altura || '?'}cm` : 
+                    'Não especificado';
+                
+                itemDiv.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h5 class="font-medium text-lg">${item.modelo || 'Produto'} ${index + 1}</h5>
+                        <div class="text-right">
+                            <span class="block text-sm text-gray-600">Quantidade: ${item.quantidade}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Linha:</span> ${item.linha || 'Não especificado'}</p>
+                            <p class="text-sm"><span class="font-medium">Ambiente:</span> ${item.ambiente || 'Não especificado'}</p>
+                            <p class="text-sm"><span class="font-medium">Cor:</span> ${item.cor || 'Não especificado'}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm"><span class="font-medium">Tipo:</span> ${item.tipo || 'Não especificado'}</p>
+                            <p class="text-sm"><span class="font-medium">Dimensões:</span> ${dimensoes}</p>
+                        </div>
+                    </div>
+                    
+                    ${item.descricao ? `
+                        <div class="mt-3">
+                            <p class="text-sm"><span class="font-medium">Descrição:</span></p>
+                            <p class="text-sm mt-1">${item.descricao}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${imagemHTML}
+                `;
+                
+                itensContainer.appendChild(itemDiv);
+                
+                // Adicionar área de desenho para cada item
+                const drawingArea = document.createElement('div');
+                drawingArea.className = 'drawing-area mb-6';
+                drawingArea.innerHTML = `
+                    <p class="mb-2 font-medium">${item.modelo || 'Produto'} ${index + 1} - ${item.ambiente || 'Ambiente não especificado'}</p>
+                    <div class="border border-dashed border-gray-400 h-48"></div>
+                `;
+                drawingAreas.appendChild(drawingArea);
+            });
+            
+            document.getElementById('modalObservacoes').textContent = orcamento.observacoes || 'Nenhuma observação.';
+            
+            // Mostrar modal
+            document.getElementById('orcamentoModal').classList.remove('hidden');
+        }
+        
+        function excluirOrcamento(id) {
+            if (!confirm('Tem certeza que deseja excluir este orçamento?')) return;
+            
+            orcamentos = orcamentos.filter(o => o.id !== id);
+            localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+            
+            atualizarTabelaOrcamentos();
+        }
+        
+        document.getElementById('searchOrcamentoBtn').addEventListener('click', function() {
+            const filtro = document.getElementById('searchOrcamento').value;
+            atualizarTabelaOrcamentos(filtro);
+        });
+        
+        document.getElementById('searchOrcamento').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const filtro = this.value;
+                atualizarTabelaOrcamentos(filtro);
+            }
+        });
+        
+        // Modal de Orçamento
+        document.getElementById('closeOrcamentoModalBtn').addEventListener('click', function() {
+            document.getElementById('orcamentoModal').classList.add('hidden');
+        });
+        
+        document.getElementById('printOrcamentoBtn').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Compartilhar via WhatsApp
+        document.getElementById('shareWhatsappBtn').addEventListener('click', function() {
+            if (!currentOrcamento) return;
+            
+            const cliente = currentOrcamento.cliente;
+            const telefone = cliente.telefone.replace(/\D/g, ''); // Remove caracteres não numéricos
+            
+            // Criar texto do orçamento
+            let mensagem = `*ORÇAMENTO #${currentOrcamento.id}*\n\n`;
+            mensagem += `*Cliente:* ${cliente.nome}\n`;
+            mensagem += `*Data:* ${formatarData(currentOrcamento.data)}\n\n`;
+            
+            mensagem += `*ITENS:*\n`;
+            currentOrcamento.itens.forEach((item, index) => {
+                mensagem += `\n*Item ${index + 1}:* ${item.modelo || 'Produto'}\n`;
+                mensagem += `Quantidade: ${item.quantidade}\n`;
+                if (item.linha) mensagem += `Linha: ${item.linha}\n`;
+                if (item.ambiente) mensagem += `Ambiente: ${item.ambiente}\n`;
+                if (item.cor) mensagem += `Cor: ${item.cor}\n`;
+                if (item.tipo) mensagem += `Tipo: ${item.tipo}\n`;
+                
+                // Dimensões
+                if (item.largura || item.altura) {
+                    mensagem += `Dimensões: ${item.largura || '?'}cm × ${item.altura || '?'}cm\n`;
+                }
+                
+                if (item.descricao) mensagem += `Descrição: ${item.descricao}\n`;
+            });
+            
+            if (currentOrcamento.observacoes) {
+                mensagem += `\n*Observações:*\n${currentOrcamento.observacoes}\n`;
+            }
+            
+            // Codificar a mensagem para URL
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            
+            // Criar URL do WhatsApp
+            const whatsappURL = `https://wa.me/${telefone}?text=${mensagemCodificada}`;
+            
+            // Abrir em nova janela
+            window.open(whatsappURL, '_blank');
+        });
+        
+        // Adicionar evento para remover item ao item inicial
+        document.querySelector('.remove-item').addEventListener('click', function() {
+            if (document.querySelectorAll('.item-row').length > 1) {
+                this.closest('.item-row').remove();
+            } else {
+                alert('É necessário pelo menos um item no orçamento.');
+            }
+        });
+        
+        // Definir a primeira aba como ativa no carregamento
+        document.querySelector('.tab').click();
+  </script>
+  <script>
+   document.getElementById("clientForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const cliente = {
+    nome: document.getElementById('nome').value,
+    telefone: document.getElementById('telefone').value,
+    endereco: document.getElementById('endereco').value,
+    obs: document.getElementById('obs').value
+  };
+
+  const SUPABASE_URL = "https://qxyeozrsztnqvyilcmdz.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4eWVvenJzenRucXZ5aWxjbWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NzM3MTcsImV4cCI6MjA2MzI0OTcxN30.GDiOnJpPE8uE751CwvR_N8qL6k4ao-CXGwrhtcA4joU";
+
+  const resposta = await fetch(`${SUPABASE_URL}/rest/v1/clientes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify(cliente)
+  });
+
+  if (resposta.ok) {
+    alert("Cliente cadastrado com sucesso!");
+    this.reset();
+  } else {
+    const erro = await resposta.json();
+    alert("Erro ao cadastrar cliente: " + JSON.stringify(erro));
+  }
+});
+  </script>
+ </body>
+</html>
